@@ -40,7 +40,7 @@ var keyFunc = func(token *jwt.Token) (interface{}, error) {
 	return jwt_key, nil
 }
 
-func ParseToken(tokenString string, keyFunc jwt.Keyfunc) (*jwt.RegisteredClaims, error) {
+func ParseToken(tokenString string) (*jwt.RegisteredClaims, error) {
 	token, err := jwt.ParseWithClaims(tokenString, &jwt.RegisteredClaims{}, keyFunc)
 	if err != nil {
 		return nil, err
