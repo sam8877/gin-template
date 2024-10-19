@@ -7,11 +7,28 @@ import (
 
 func main() {
 	key := "0123456789ABCDEF"
-	s := CreateToken("cdbb", time.Second*3600, key)
-	fmt.Printf("Hello and welcome, %s!\n", s)
+	s, err := CreateToken("cdbb", time.Second*1, key)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(s)
 
 	claim, err := ParseToken(s, key)
 	if err == nil {
 		fmt.Println(claim)
 	}
+
+	time.Sleep(time.Second * 2)
+
+	exped := claim.Expired()
+	if exped {
+		s, err := CreateToken("cdbb", time.Second*1, key)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		fmt.Println(s)
+	}
+
 }
