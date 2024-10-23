@@ -1,34 +1,16 @@
 package main
 
 import (
-	"fmt"
-	"time"
+	"gin-template/midware"
+	"gin-template/service"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	key := "0123456789ABCDEF"
-	s, err := CreateToken("cdbb", time.Second*1, key)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Println(s)
-
-	claim, err := ParseToken(s, key)
-	if err == nil {
-		fmt.Println(claim)
-	}
-
-	time.Sleep(time.Second * 2)
-
-	exped := claim.Expired()
-	if exped {
-		s, err := CreateToken("cdbb", time.Second*1, key)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-		fmt.Println(s)
-	}
+	r := gin.Default()
+	r.Use(midware.AuthMidware())
+	r.POST("/create_token", service.CreateToken())
+	r.POST("/refresh_token", service.RefreshToken())
+	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 
 }

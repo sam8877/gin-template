@@ -1,4 +1,4 @@
-package main
+package utils
 
 import (
 	"encoding/base64"
@@ -22,6 +22,7 @@ func (receiver *TokenStruct) Expired() bool {
 	return time.Now().Unix() > receiver.ExpiresAt
 }
 
+// CreateToken 根据userId创建token
 func CreateToken(userId string, dur time.Duration, jwt_key string) (string, error) {
 	// 生成token结构体
 	tokenStruct := TokenStruct{
@@ -31,6 +32,7 @@ func CreateToken(userId string, dur time.Duration, jwt_key string) (string, erro
 	return CreateTokenFromTokenStruct(&tokenStruct, dur, jwt_key)
 }
 
+// CreateTokenFromTokenStruct 根据现有token结构体重新生成token，只更新时间字段
 func CreateTokenFromTokenStruct(tokenStruct *TokenStruct, dur time.Duration, jwt_key string) (string, error) {
 	tokenStruct.IssuedAt = time.Now().Unix()
 	tokenStruct.ExpiresAt = time.Now().Add(dur).Unix()
@@ -61,6 +63,7 @@ func getTokenSign(tokenBase64 string, signKey string) (string, error) {
 	return base64.StdEncoding.EncodeToString(encrypted), nil
 }
 
+// ParseToken 解析token
 func ParseToken(tokenString, jwt_key string) (*TokenStruct, error) {
 	strs := strings.Split(tokenString, ".")
 	if len(strs) != 2 {

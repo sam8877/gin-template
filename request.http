@@ -1,0 +1,16 @@
+### Send POST request with json body
+POST http://127.0.0.1:8080/create_token
+Content-Type: application/json
+
+{
+  "userId": "cdbb"
+}
+
+### Send POST request with json body
+POST http://127.0.0.1:8080/refresh_token
+Content-Type: application/json
+
+{
+  "token": ""
+}
+
