@@ -7,7 +7,9 @@ import (
 )
 
 func main() {
-	r := gin.Default()
+	r := gin.New()
+	r.Use(gin.Logger(), midware.Recovery())
+
 	r.Use(midware.AuthMidware())
 	r.POST("/create_token", service.CreateToken())
 	r.POST("/refresh_token", service.RefreshToken())

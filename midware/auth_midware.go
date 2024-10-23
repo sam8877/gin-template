@@ -1,7 +1,6 @@
 package midware
 
 import (
-	"errors"
 	"fmt"
 	"gin-template/conf"
 	"gin-template/utils"
@@ -26,17 +25,14 @@ func AuthMidware() gin.HandlerFunc {
 			// 认证
 			tokenStr := ctx.GetHeader("token")
 			if tokenStr == "" {
-				ctx.AbortWithError(http.StatusUnauthorized, errors.New("token is empty"))
-				//ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"code": http.StatusUnauthorized, "msg": "invalid token"})
+				panic("token is empty")
 			}
 			token, err := utils.ParseToken(tokenStr, conf.TokenSecretKey)
 			if err != nil {
-				ctx.AbortWithError(http.StatusUnauthorized, errors.New("invalid token"))
-				//ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"code": http.StatusUnauthorized, "msg": "invalid token"})
+				panic("invalid token")
 			}
 			if token.Expired() {
-				ctx.AbortWithError(http.StatusUnauthorized, errors.New("token is expired"))
-				//ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"code": http.StatusUnauthorized, "msg": "token is expired"})
+				panic("token is expired")
 			}
 
 			// TODO 授权 暂不实现
