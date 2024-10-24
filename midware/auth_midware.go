@@ -3,16 +3,11 @@ package midware
 import (
 	"fmt"
 	"gin-template/conf"
+	"gin-template/model"
 	"gin-template/utils"
 	"github.com/gin-gonic/gin"
-	"net/http"
 	"regexp"
 )
-
-type reqRexInfo struct {
-	UrlRex string `json:"url_rex"`
-	Method string `json:"method"`
-}
 
 func AuthMidware() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -62,7 +57,8 @@ func matchPath(pattern, path string) bool {
 	return r.MatchString(path)
 }
 
-func getWhiteList() []reqRexInfo {
-	// TODO 读取白名单
-	return []reqRexInfo{{UrlRex: "/create_token", Method: http.MethodPost}, {UrlRex: "/refresh_token", Method: http.MethodPost}}
+func getWhiteList() []model.ReqRexInfo {
+	// 读取白名单
+	authConf := conf.GetAuthConf()
+	return authConf.WhiteList
 }

@@ -1,22 +1,15 @@
 package conf
 
 import (
+	"encoding/json"
+	"fmt"
+	"gin-template/model"
 	"github.com/spf13/viper"
 )
 
-type ConfStruct struct {
-	Auth *AuthStruct `mapstructure:"auth"`
-}
+var Instance = &model.ConfStruct{}
 
-type AuthStruct struct {
-	TokenSecretKey      string `mapstructure:"secret_key"`
-	TokenExpireSeconds  uint   `mapstructure:"expire_seconds"`
-	TokenRefreshSeconds uint   `mapstructure:"refresh_seconds"`
-}
-
-var Instance = &ConfStruct{}
-
-func GetAuthConf() *AuthStruct {
+func GetAuthConf() *model.AuthStruct {
 	return Instance.Auth
 }
 
@@ -27,4 +20,10 @@ func init() {
 	v.AddConfigPath("./")
 	v.ReadInConfig()
 	v.Unmarshal(Instance)
+
+	bts, err := json.Marshal(Instance)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(bts))
 }
