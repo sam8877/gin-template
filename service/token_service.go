@@ -16,7 +16,7 @@ func CreateToken() gin.HandlerFunc {
 		}
 		var Up = UP{}
 		c.ShouldBindJSON(&Up)
-		token, err := utils.CreateToken(Up.UserId, time.Second*time.Duration(conf.TokenExpireSeconds), conf.TokenSecretKey)
+		token, err := utils.CreateToken(Up.UserId, time.Second*time.Duration(conf.GetAuthConf().TokenExpireSeconds), conf.GetAuthConf().TokenSecretKey)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"code": http.StatusInternalServerError, "msg": err.Error()})
 		}
@@ -32,14 +32,14 @@ func RefreshToken() gin.HandlerFunc {
 		var tk = Tk{}
 		c.ShouldBindJSON(&tk)
 
-		tS, err := utils.ParseToken(tk.Token, conf.TokenSecretKey)
+		tS, err := utils.ParseToken(tk.Token, conf.GetAuthConf().TokenSecretKey)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"code": http.StatusInternalServerError, "msg": err.Error()})
 		}
 		if !tS.Expired() {
-			if tS.ExpiresAt-time.Now().Unix() < int64(conf.TokenRefreshSeconds) {
+			if tS.ExpiresAt-time.Now().Unix() < int64(conf.GetAuthConf().TokenRefreshSeconds) {
 				// 生成新token
-				newTk, err := utils.CreateTokenFromTokenStruct(tS, time.Second*time.Duration(conf.TokenExpireSeconds), conf.TokenSecretKey)
+				newTk, err := utils.CreateTokenFromTokenStruct(tS, time.Second*time.Duration(conf.GetAuthConf().TokenExpireSeconds), conf.GetAuthConf().TokenSecretKey)
 				if err != nil {
 					c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"code": http.StatusInternalServerError, "msg": err.Error()})
 				}

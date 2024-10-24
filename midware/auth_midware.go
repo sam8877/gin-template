@@ -27,7 +27,7 @@ func AuthMidware() gin.HandlerFunc {
 			if tokenStr == "" {
 				panic("token is empty")
 			}
-			token, err := utils.ParseToken(tokenStr, conf.TokenSecretKey)
+			token, err := utils.ParseToken(tokenStr, conf.GetAuthConf().TokenSecretKey)
 			if err != nil {
 				panic("invalid token")
 			}

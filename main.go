@@ -1,6 +1,7 @@
 package main
 
 import (
+	_ "gin-template/conf"
 	"gin-template/midware"
 	"gin-template/service"
 	"github.com/gin-gonic/gin"
